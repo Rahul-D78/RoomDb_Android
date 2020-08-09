@@ -1,5 +1,6 @@
 package com.sih.roomdbprac
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -19,7 +20,7 @@ interface UserDao {
    fun delete(user: User)
 
    @Query("SELECT * FROM User")
-   suspend fun getAllUser(): List<User>
+   fun getAllUser(): LiveData<List<User>>
 
    @Query("SELECT * FROM User WHERE age >= :age")
    fun getUserAge(age:Int):List<User>

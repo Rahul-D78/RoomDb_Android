@@ -2,6 +2,7 @@ package com.sih.roomdbprac
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.room.Room
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
@@ -29,22 +30,20 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch(Dispatchers.IO) {  db.userDao().insert(User("Pulkit Bhaiya", "Bhubaneswar", "834841681628", 20)) }
         }
 
-        btnFetch.setOnClickListener {
-           runBlocking {
-           val list = GlobalScope.async(Dispatchers.IO) {  db.userDao().getAllUser() }
 
-
-                if(list.await().isNotEmpty()) {
-                    with(list.await()[0]) {
-                    tvName.text = name
+        db.userDao().getAllUser().observe(this, Observer {list ->
+            if(list.isNotEmpty()) {
+                with(list[list.size-1]) {
+                    tvName.text = name + id
                     tvName.text = address
                     tvName.text = phone
                     tvName.text = age.toString()
 
                 }
-                }
             }
+        })
+
         }
     }
-}
+
 
